@@ -1,7 +1,12 @@
 <html>
-    <ul>
+  <head>
+    <link rel="stylesheet" type="text/css" href="/static/style.css">
+  </head>
+  <body>
+    <ul class='mosaic'>
       {{ range $el := .files }}
       <li><img src='/f/{{ $el }}' /></li>
       {{ end }}
     </ul>
+  </body>
 </html>
