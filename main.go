@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"net/http"
 	"os"
 
@@ -48,6 +49,20 @@ func main() {
 
 		c.HTML(http.StatusOK, "index.html", gin.H{
 			"files": filenames,
+		})
+	})
+
+	router.GET("/f/*path", func(c *gin.Context) {
+		reader, err := fileserver.Get(c.Param("path"))
+		if err != nil {
+			fmt.Println(err)
+			c.Status(http.StatusInternalServerError)
+			return
+		}
+
+		c.Stream(func(w io.Writer) bool {
+			_, err := io.CopyN(w, reader, 1024)
+			return err == nil
 		})
 	})
 

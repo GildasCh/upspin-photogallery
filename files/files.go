@@ -1,6 +1,7 @@
 package files
 
 import (
+	"io"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -9,6 +10,7 @@ import (
 
 type Accesser interface {
 	Glob(pattern string) ([]*upspin.DirEntry, error)
+	Open(name upspin.PathName) (upspin.File, error)
 }
 
 type Server struct {
@@ -16,7 +18,7 @@ type Server struct {
 }
 
 func (s *Server) List(path string) ([]string, error) {
-	path = formatPath(path)
+	path = formatDirPath(path)
 
 	entries, err := s.Accesser.Glob(path)
 	if err != nil {
@@ -31,8 +33,24 @@ func (s *Server) List(path string) ([]string, error) {
 	return filenames, nil
 }
 
-func formatPath(path string) string {
+func (s *Server) Get(path string) (io.Reader, error) {
+	upath := formatFilePath(path)
+
+	f, err := s.Accesser.Open(upath)
+	if err != nil {
+		return nil, errors.Wrapf(err, "could not Open path %q", path)
+	}
+
+	return f, nil
+}
+
+func formatDirPath(path string) string {
 	path = path + "*"
 	path = strings.TrimPrefix(path, "/")
 	return path
+}
+
+func formatFilePath(path string) upspin.PathName {
+	path = strings.TrimPrefix(path, "/")
+	return upspin.PathName(path)
 }
