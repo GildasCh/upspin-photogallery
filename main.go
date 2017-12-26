@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 	"os"
-	"strings"
 
+	"github.com/gildasch/upspin-photogallery/files"
 	"github.com/gin-gonic/gin"
 	"upspin.io/client"
 	"upspin.io/config"
@@ -19,23 +19,16 @@ func main() {
 	}
 
 	client := client.New(cfg)
+	fileserver := &files.Server{Accesser: client}
 
 	router := gin.Default()
 
 	router.GET("/api/*path", func(c *gin.Context) {
-		path := strings.TrimPrefix(c.Param("path")+"*", "/")
-
-		entries, err := client.Glob(path)
+		filenames, err := fileserver.List(c.Param("path"))
 		if err != nil {
-			fmt.Printf("Could not list pattern %q, err: %v\n",
-				path, err)
+			fmt.Println(err)
 			c.Status(500)
 			return
-		}
-
-		filenames := []string{}
-		for _, entry := range entries {
-			filenames = append(filenames, string(entry.Name))
 		}
 
 		c.JSON(200, gin.H{
