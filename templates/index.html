@@ -1,12 +1,19 @@
 <html>
   <head>
     <link rel="stylesheet" type="text/css" href="/static/style.css">
+    <script src="https://unpkg.com/vue"></script>
   </head>
   <body>
-    <ul class='mosaic'>
-      {{ range $el := .files }}
-      <li><img src='/f/{{ $el }}' /></li>
-      {{ end }}
-    </ul>
+    <div id='app'>
+      <ul class='mosaic'>
+        {{ range $el := .files }}
+        <li><img src='/f/{{ $el }}' v-on:click="show('/f/{{ $el }}')" /></li>
+        {{ end }}
+      </ul>
+
+      <div class='theater' v-bind:style="{ backgroundImage: 'url(' + theaterImage + ')' }" v-if='showTheaterImage'  v-on:click="hide"></div>
+    </div>
+
+    <script src='/static/app.js'></script>
   </body>
 </html>
