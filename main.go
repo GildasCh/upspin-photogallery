@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"net/http"
 	"os"
 
 	"github.com/gildasch/upspin-photogallery/files"
@@ -27,11 +28,25 @@ func main() {
 		filenames, err := fileserver.List(c.Param("path"))
 		if err != nil {
 			fmt.Println(err)
-			c.Status(500)
+			c.Status(http.StatusInternalServerError)
 			return
 		}
 
-		c.JSON(200, gin.H{
+		c.JSON(http.StatusOK, gin.H{
+			"files": filenames,
+		})
+	})
+
+	router.LoadHTMLFiles("templates/index.html")
+	router.GET("/s/*path", func(c *gin.Context) {
+		filenames, err := fileserver.List(c.Param("path"))
+		if err != nil {
+			fmt.Println(err)
+			c.Status(http.StatusInternalServerError)
+			return
+		}
+
+		c.HTML(http.StatusOK, "index.html", gin.H{
 			"files": filenames,
 		})
 	})
