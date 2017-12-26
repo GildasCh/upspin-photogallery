@@ -6,14 +6,18 @@
   <body>
     <div id='app'>
       <ul class='mosaic'>
-        {{ range $el := .files }}
-        <li><img src='/f/{{ $el }}' v-on:click="show('/f/{{ $el }}')" /></li>
+        {{ range $index, $el := .files }}
+        <li><img src='/f/{{ $el }}' v-on:click="show({{ $index }})" /></li>
         {{ end }}
       </ul>
 
-      <div class='theater' v-bind:style="{ backgroundImage: 'url(' + theaterImage + ')' }" v-if='showTheaterImage'  v-on:click="hide"></div>
+      <div tabindex="0" class='theater' v-bind:style="{ backgroundImage: 'url(' + theaterImage + ')' }" v-if='showTheaterImage' v-on:click="hide" v-on:keydown.left="previous" v-on:keydown.right="next">
+      </div>
     </div>
 
+    <script>
+      var files = {{ .files }};
+    </script>
     <script src='/static/app.js'></script>
   </body>
 </html>
