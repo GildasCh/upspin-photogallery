@@ -11,7 +11,7 @@
         {{ end }}
       </ul>
 
-      <div tabindex="0" class='theater' v-bind:style="{ backgroundImage: 'url(' + theaterImage + ')' }" v-if='showTheaterImage' v-on:click="hide" v-on:keydown.left="previous" v-on:keydown.right="next">
+      <div tabindex="0" class='theater' v-bind:style="{ backgroundImage: 'url(\'' + theaterImage + '\')' }" v-if='showTheaterImage' v-on:click="hide" v-on:keydown.left="previous" v-on:keydown.right="next">
       </div>
     </div>
 
