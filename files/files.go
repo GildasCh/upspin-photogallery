@@ -36,7 +36,15 @@ func (s *Server) List(path string) ([]string, error) {
 
 	filenames := []string{}
 	for _, entry := range entries {
-		filenames = append(filenames, string(entry.Name))
+		if !entry.IsDir() {
+			filenames = append(filenames, string(entry.Name))
+		}
+
+		sub, err := s.List(string(entry.Name))
+		if err != nil {
+			continue
+		}
+		filenames = append(filenames, sub...)
 	}
 
 	return filenames, nil
