@@ -17,12 +17,21 @@ type Server struct {
 	Accesser Accesser
 }
 
-func (s *Server) List(path string) ([]string, error) {
-	path = formatDirPath(path)
+func createPattern(path string) string {
+	pattern := strings.TrimPrefix(path, "/")
 
-	entries, err := s.Accesser.Glob(path)
+	if strings.Contains(pattern, "*") {
+		return pattern
+	}
+	return strings.TrimSuffix(pattern, "/") + "/*"
+}
+
+func (s *Server) List(path string) ([]string, error) {
+	pattern := createPattern(path)
+
+	entries, err := s.Accesser.Glob(pattern)
 	if err != nil {
-		return nil, errors.Wrapf(err, "could not Glob path %q", path)
+		return nil, errors.Wrapf(err, "could not Glob pattern %q", pattern)
 	}
 
 	filenames := []string{}
@@ -31,6 +40,11 @@ func (s *Server) List(path string) ([]string, error) {
 	}
 
 	return filenames, nil
+}
+
+func formatFilePath(path string) upspin.PathName {
+	path = strings.TrimPrefix(path, "/")
+	return upspin.PathName(path)
 }
 
 func (s *Server) Get(path string) (io.Reader, error) {
@@ -42,15 +56,4 @@ func (s *Server) Get(path string) (io.Reader, error) {
 	}
 
 	return f, nil
-}
-
-func formatDirPath(path string) string {
-	path = path + "*"
-	path = strings.TrimPrefix(path, "/")
-	return path
-}
-
-func formatFilePath(path string) upspin.PathName {
-	path = strings.TrimPrefix(path, "/")
-	return upspin.PathName(path)
 }
