@@ -42,6 +42,29 @@ func (s *Server) List(path string) ([]string, error) {
 	return filenames, nil
 }
 
+func isImage(filename string) bool {
+	filename = strings.ToLower(filename)
+	return strings.HasSuffix(filename, ".jpg") ||
+		strings.HasSuffix(filename, ".jpeg") ||
+		strings.HasSuffix(filename, ".png") ||
+		strings.HasSuffix(filename, ".gif") ||
+		strings.HasSuffix(filename, ".bmp") ||
+		strings.HasSuffix(filename, ".webp")
+}
+
+func (s *Server) ListImages(path string) ([]string, error) {
+	filenames, err := s.List(path)
+
+	filtered := []string{}
+	for _, f := range filenames {
+		if isImage(f) {
+			filtered = append(filtered, f)
+		}
+	}
+
+	return filtered, err
+}
+
 func formatFilePath(path string) upspin.PathName {
 	path = strings.TrimPrefix(path, "/")
 	return upspin.PathName(path)

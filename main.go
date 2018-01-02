@@ -42,7 +42,7 @@ func main() {
 
 	router.LoadHTMLFiles("templates/index.html")
 	router.GET("/s/*path", func(c *gin.Context) {
-		filenames, err := fileserver.List(c.Param("path"))
+		filenames, err := fileserver.ListImages(c.Param("path"))
 		if err != nil {
 			fmt.Println("fileserver.List:", err)
 			c.Status(http.StatusInternalServerError)
