@@ -37,6 +37,13 @@ func (s *Server) List(path string) ([]string, error) {
 	filenames := []string{}
 	for _, entry := range entries {
 		if !entry.IsDir() {
+			f, err := s.Accesser.Open(entry.Name)
+			if err != nil {
+				// we cannot access this file
+				continue
+			}
+			f.Close()
+
 			filenames = append(filenames, string(entry.Name))
 		}
 

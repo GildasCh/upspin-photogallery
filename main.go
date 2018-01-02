@@ -32,7 +32,7 @@ func main() {
 		filenames, err := fileserver.List(c.Param("path"))
 		if err != nil {
 			fmt.Println("fileserver.List:", err)
-			c.Status(http.StatusInternalServerError)
+			c.Status(http.StatusBadRequest)
 			return
 		}
 
@@ -59,7 +59,7 @@ func main() {
 		reader, err := fileserver.Get(c.Param("path"))
 		if err != nil {
 			fmt.Println("fileserver.Get:", err)
-			c.Status(http.StatusInternalServerError)
+			c.Status(http.StatusBadRequest)
 			return
 		}
 
