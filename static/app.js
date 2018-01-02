@@ -8,7 +8,7 @@ var app = new Vue({
         event: {}
     },
     created: function () {
-        window.addEventListener('keyup', this.key);
+        window.addEventListener('keydown', this.key);
     },
     methods: {
         show: function (imgNumber) {
