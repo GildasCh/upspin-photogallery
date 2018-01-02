@@ -6,7 +6,7 @@
   <body>
     <div id='app'>
       <ul class='mosaic'>
-        {{ range $index, $el := .files }}
+        {{ range $index, $el := .collection.Images }}
         <li><img src='/f/{{ $el }}' v-on:click="show({{ $index }})" /></li>
         {{ end }}
       </ul>
@@ -16,7 +16,7 @@
     </div>
 
     <script>
-      var files = {{ .files }};
+      var files = {{ .collection.Images }};
     </script>
     <script src='/static/app.js'></script>
   </body>

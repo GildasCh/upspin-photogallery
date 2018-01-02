@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/gildasch/upspin-photogallery/collection"
 	"github.com/gildasch/upspin-photogallery/files"
 	"github.com/gin-gonic/gin"
 	"upspin.io/client"
@@ -42,7 +43,7 @@ func main() {
 
 	router.LoadHTMLFiles("templates/index.html")
 	router.GET("/s/*path", func(c *gin.Context) {
-		filenames, err := fileserver.ListImages(c.Param("path"))
+		filenames, err := fileserver.List(c.Param("path"))
 		if err != nil {
 			fmt.Println("fileserver.List:", err)
 			c.Status(http.StatusInternalServerError)
@@ -50,7 +51,7 @@ func main() {
 		}
 
 		c.HTML(http.StatusOK, "index.html", gin.H{
-			"files": filenames,
+			"collection": collection.New(filenames),
 		})
 	})
 
