@@ -37,9 +37,18 @@ func main() {
 			return
 		}
 
-		c.HTML(http.StatusOK, "index.html", gin.H{
-			"collection": collection.New(filenames),
-		})
+		coll := collection.New(filenames)
+
+		obj := gin.H{
+			"collection": coll,
+		}
+
+		if c.Query("albums") == "1" {
+			obj["albums"] = coll.Albums()
+			obj["showAlbums"] = true
+		}
+
+		c.HTML(http.StatusOK, "index.html", obj)
 	})
 
 	router.GET("/f/*path", func(c *gin.Context) {

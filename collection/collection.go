@@ -31,3 +31,20 @@ func New(filenames []string) *Collection {
 
 	return &Collection{Images: images}
 }
+
+func (c *Collection) Albums() []string {
+	tmp := map[string]struct{}{}
+
+	for _, i := range c.Images {
+		splitted := strings.Split(i, "/")
+		tmp[strings.Join(splitted[:len(splitted)-1], "/")] = struct{}{}
+	}
+
+	uniques := []string{}
+
+	for u, _ := range tmp {
+		uniques = append(uniques, u)
+	}
+
+	return uniques
+}

@@ -4,6 +4,12 @@
     <script src="https://unpkg.com/vue"></script>
   </head>
   <body>
+    {{ if .showAlbums }}
+    {{ range $album := .albums }}
+    <a href='/s/{{ $album }}'>{{ $album }}</a>
+    {{ end }}
+    {{ end }}
+
     <div id='app'>
       <ul class='mosaic'>
         {{ range $index, $el := .collection.Images }}
