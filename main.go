@@ -28,19 +28,6 @@ func main() {
 
 	router.Static("/static", "./static")
 
-	router.GET("/api/*path", func(c *gin.Context) {
-		filenames, err := fileserver.List(c.Param("path"))
-		if err != nil {
-			fmt.Println("fileserver.List:", err)
-			c.Status(http.StatusBadRequest)
-			return
-		}
-
-		c.JSON(http.StatusOK, gin.H{
-			"files": filenames,
-		})
-	})
-
 	router.LoadHTMLFiles("templates/index.html")
 	router.GET("/s/*path", func(c *gin.Context) {
 		filenames, err := fileserver.List(c.Param("path"))
